@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Sort - 氣泡排序法</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #cce4ff; color: #333; margin: 2rem; }
+    h1 { color: #004aa6; }
+    section { margin-bottom: 1.5rem; }
+    pre { background: #fff; padding: 0.5rem; border-radius: 8px; overflow-x: auto; margin: 0; }
+    .code-highlight { display: block; background: #000; color: #fff; padding: 1rem; border-radius: 6px; font-family: Consolas, "Courier New", monospace; white-space: pre; line-height: 1.3; }
+    .code-line { padding: 0.2rem 0; border-left: 3px solid transparent; transition: background-color 0.3s ease; }
+    .code-line.highlight { background-color: #333; border-left-color: #ff8c00; }
+    .code-line.comment { color: #6a9955; font-style: italic; }
+    .code-line.keyword { color: #569cd6; }
+    .code-line.variable { color: #9cdcfe; }
+    .code-line.operator { color: #d4d4d4; }
+    .code-line.number { color: #b5cea8; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+    th { background-color: #e0f0ff; }
+    .visualization { background: #fff; border-radius: 8px; padding: 1rem; }
+    .bars { display: flex; align-items: flex-end; gap: 6px; height: 250px; margin: 1rem 0; }
+    .bar { flex: 1; background: #004aa6; border-radius: 4px 4px 0 0; position: relative; }
+    .bar.active { background: #ff8c00; }
+    .bar.swap { background: #d73a49; }
+    .bar.sorted { background: #28a745; }
+    .bar span { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); color: #000; font-size: 0.85rem; font-weight: bold; }
+    .controls { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .controls button { background: #004aa6; color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1rem; cursor: pointer; }
+    .controls button:disabled { background: #7a9ed7; cursor: default; }
+    .status { margin-top: 0.75rem; font-weight: bold; }
+    .stats { margin-top: 1rem; padding: 1rem; background: #e0f0ff; border-radius: 6px; }
+    .stats h4 { margin: 0; color: #004aa6; }
+    .stats p { margin: 0.5rem 0; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <h1>Bubble Sort - 氣泡排序法</h1>
+  <section>
+    <h2>操作原理</h2>
+    <p>氣泡排序透過反覆比較相鄰元素，將較大的元素交換到右側，像氣泡一樣逐步浮到序列末端。每一輪迴圈會把當前未排序區間中的最大值移到尾端，直到整個陣列排序完成。</p>
+  </section>
+  <section>
+    <h2>時間和空間複雜度</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>情況</th>
+          <th>複雜度</th>
+          <th>說明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>最佳情況</td>
+          <td>O(n)</td>
+          <td>當陣列已經排序或接近排序時，只需一次掃描即可完成。</td>
+        </tr>
+        <tr>
+          <td>平均情況</td>
+          <td>O(n<sup>2</sup>)</td>
+          <td>一般無序陣列需要雙層迴圈比較與交換。</td>
+        </tr>
+        <tr>
+          <td>最壞情況</td>
+          <td>O(n<sup>2</sup>)</td>
+          <td>完全逆序陣列需要最多交換與比較次數。</td>
+        </tr>
+        <tr>
+          <td>空間複雜度</td>
+          <td>O(1)</td>
+          <td>僅使用常數級額外空間來暫存交換值。</td>
+        </tr>
+        <tr>
+          <td>穩定程度</td>
+          <td>穩定</td>
+          <td>相等元素不會改變相對順序。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section>
+    <h2>演算法偽代碼與互動視覺化</h2>
+    <div style="display: flex; gap: 2rem; align-items: flex-start;">
+      <div style="flex: 1;">
+        <h3>演算法偽代碼</h3>
+        <div class="code-highlight">
+          <div id="line1" class="code-line"><span class="keyword">function</span> bubbleSort(arr):</div>
+          <div id="line2" class="code-line">  n = arr.<span class="variable">length</span></div>
+          <div id="line3" class="code-line">  <span class="keyword">for</span> i = <span class="number">0</span> <span class="keyword">to</span> n - <span class="number">2</span>:</div>
+          <div id="line4" class="code-line">    swapped = <span class="keyword">false</span></div>
+          <div id="line5" class="code-line">    <span class="keyword">for</span> j = <span class="number">0</span> <span class="keyword">to</span> n - <span class="number">2</span> - i:</div>
+          <div id="line6" class="code-line">      <span class="keyword">if</span> arr[j] > arr[j + <span class="number">1</span>]:</div>
+          <div id="line7" class="code-line">        swap(arr[j], arr[j + <span class="number">1</span>])</div>
+          <div id="line8" class="code-line">        swapped = <span class="keyword">true</span></div>
+          <div id="line9" class="code-line">    <span class="keyword">if</span> <span class="keyword">not</span> swapped: <span class="keyword">break</span></div>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <h3>互動視覺化操作</h3>
+        <div class="visualization">
+          <div class="controls">
+            <button id="resetButton">重設陣列</button>
+            <button id="nextButton">下一步</button>
+            <button id="autoButton">自動執行</button>
+          </div>
+          <div class="status" id="stepStatus">狀態：尚未開始</div>
+          <div class="bars" id="bars"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2>實驗分析</h2>
+    <h3>步數統計</h3>
+    <div class="stats">
+      <p>比較次數：<span id="compareCount">0</span></p>
+      <p>交換次數：<span id="swapCount">0</span></p>
+    </div>
+    <p>本區可記錄測試資料與觀察結果，方便比較不同輸入情境下的排序行為。</p>
+  </section>
+  <script>
+    const initialBubbleArray = [7, 3, 9, 2, 6, 4, 8];
+    const barsEl = document.getElementById('bars');
+    const stepStatus = document.getElementById('stepStatus');
+    const nextButton = document.getElementById('nextButton');
+    const resetButton = document.getElementById('resetButton');
+    const autoButton = document.getElementById('autoButton');
+    const compareCountEl = document.getElementById('compareCount');
+    const swapCountEl = document.getElementById('swapCount');
+    let data = [];
+    let i = 0;
+    let j = 0;
+    let swapped = false;
+    let running = false;
+    let intervalId = null;
+    let compareIndexes = [];
+    let swapIndexes = [];
+    let compareCount = 0;
+    let swapCount = 0;
+
+    function resetVisualization() {
+      data = [...initialBubbleArray];
+      i = 0;
+      j = 0;
+      swapped = false;
+      running = false;
+      compareIndexes = [];
+      swapIndexes = [];
+      compareCount = 0;
+      swapCount = 0;
+      clearInterval(intervalId);
+      intervalId = null;
+      autoButton.textContent = '自動執行';
+      nextButton.disabled = false;
+      clearCodeHighlight();
+      updateStatus('已重設陣列，準備開始');
+      compareCountEl.textContent = '0';
+      swapCountEl.textContent = '0';
+      renderBars();
+    }
+
+    function renderBars() {
+      barsEl.innerHTML = '';
+      const max = Math.max(...data);
+      data.forEach((value, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${(value / max) * 100}%`;
+        bar.innerHTML = `<span>${value}</span>`;
+        if (compareIndexes.includes(index)) bar.classList.add('active');
+        if (swapIndexes.includes(index)) bar.classList.add('swap');
+        if (index >= data.length - i) bar.classList.add('sorted');
+        barsEl.appendChild(bar);
+      });
+    }
+
+    function updateStatus(message) {
+      stepStatus.textContent = `狀態：${message}`;
+    }
+
+    function clearCodeHighlight() {
+      for (let lineIndex = 1; lineIndex <= 9; lineIndex++) {
+        const line = document.getElementById(`line${lineIndex}`);
+        if (line) line.classList.remove('highlight');
+      }
+    }
+
+    function highlightCode(lineNumber) {
+      clearCodeHighlight();
+      const line = document.getElementById(`line${lineNumber}`);
+      if (line) line.classList.add('highlight');
+    }
+
+    function bubbleStep() {
+      if (i >= data.length - 1) {
+        updateStatus('排序完成');
+        nextButton.disabled = true;
+        compareIndexes = [];
+        swapIndexes = [];
+        clearCodeHighlight();
+        renderBars();
+        return;
+      }
+
+      if (j >= data.length - 1 - i) {
+        if (!swapped) {
+          highlightCode(9);
+          updateStatus('已排序完成，提前終止');
+          nextButton.disabled = true;
+          compareIndexes = [];
+          swapIndexes = [];
+          renderBars();
+          return;
+        }
+        i += 1;
+        j = 0;
+        swapped = false;
+        compareIndexes = [];
+        swapIndexes = [];
+        updateStatus(`已完成第 ${i} 輪，繼續排序`);
+        renderBars();
+        return;
+      }
+
+      compareIndexes = [j, j + 1];
+      swapIndexes = [];
+      highlightCode(5);
+      compareCount++;
+      compareCountEl.textContent = compareCount;
+
+      if (data[j] > data[j + 1]) {
+        swapIndexes = [j, j + 1];
+        [data[j], data[j + 1]] = [data[j + 1], data[j]];
+        swapped = true;
+        swapCount++;
+        swapCountEl.textContent = swapCount;
+        updateStatus(`第 ${i + 1} 輪：交換 ${data[j]} 與 ${data[j + 1]}`);
+      } else {
+        updateStatus(`第 ${i + 1} 輪：比較 ${data[j]} 和 ${data[j + 1]}，無需交換`);
+      }
+
+      j += 1;
+      renderBars();
+    }
+
+    nextButton.addEventListener('click', bubbleStep);
+    resetButton.addEventListener('click', resetVisualization);
+    autoButton.addEventListener('click', () => {
+      if (running) {
+        running = false;
+        clearInterval(intervalId);
+        intervalId = null;
+        autoButton.textContent = '自動執行';
+        updateStatus('已停止自動執行');
+      } else {
+        running = true;
+        autoButton.textContent = '停止';
+        intervalId = setInterval(() => {
+          bubbleStep();
+          if (nextButton.disabled) {
+            clearInterval(intervalId);
+            running = false;
+            autoButton.textContent = '自動執行';
+          }
+        }, 800);
+      }
+    });
+
+    window.addEventListener('load', resetVisualization);
+  </script>
+</body>
+</html>
