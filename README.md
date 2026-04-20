@@ -2,7 +2,9 @@
 
 ## 報告入口
 
-[開啟互動式首頁](index.html)
+<a href="file:///c:/11428231/index.html" target="_blank" rel="noopener noreferrer">點我開啟首頁預覽</a>
+
+這個連結會直接打開首頁畫面，也就是標題下方有五個排序法按鈕的那個頁面。
 
 ## 專案概述
 
